@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
 import FocusScreen from './screens/FocusScreen';
 import ListScreen from './screens/ListScreen';
@@ -6,9 +6,22 @@ import { Task } from './types';
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
-    const taskProps = {tasks, setTasks}
 
+    const updateTaskCompletion = (taskId: string, isComplete: boolean) => {
+        setTasks((tasks) =>
+            tasks.map((task) => {
+                if (task.id === taskId)
+                    return { ...task, isComplete: isComplete };
+                return task;
+            })
+        );
+    };
 
+    const tasksApi = {
+        tasks,
+        setTasks,
+        updateTaskCompletion,
+    };
 
     return (
         <BrowserRouter>
@@ -25,10 +38,10 @@ function App() {
 
             <Switch>
                 <Route path="/" exact>
-                    <ListScreen {...taskProps} />
+                    <ListScreen {...tasksApi} />
                 </Route>
                 <Route path="/focus">
-                    <FocusScreen {...taskProps} />
+                    <FocusScreen {...tasksApi} />
                 </Route>
             </Switch>
         </BrowserRouter>
